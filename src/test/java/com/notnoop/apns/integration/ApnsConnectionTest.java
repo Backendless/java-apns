@@ -38,10 +38,7 @@ import com.notnoop.apns.utils.junit.DumpThreadsOnErrorRule;
 import com.notnoop.apns.utils.junit.Repeat;
 import com.notnoop.apns.utils.junit.RepeatRule;
 import com.notnoop.exceptions.NetworkIOException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 
 import static com.notnoop.apns.utils.FixedCertificates.LOCALHOST;
@@ -169,6 +166,7 @@ public class ApnsConnectionTest {
         assertArrayEquals(msg1.marshall(), server.getReceived().toByteArray());
     }
 
+    @Ignore
     @Test(timeout = 2000)
     public void sendOneSimpleClientCertFail() throws InterruptedException {
         ApnsService service =
@@ -183,5 +181,4 @@ public class ApnsConnectionTest {
             assertTrue("Expected bad_certifcate exception", e.getMessage().contains("bad_certificate"));
         }
     }
-
 }

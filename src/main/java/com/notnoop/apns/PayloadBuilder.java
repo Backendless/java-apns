@@ -84,6 +84,21 @@ public final class PayloadBuilder {
     }
 
     /**
+     * Sets the alert subtitle text, the text the appears to the user,
+     * to the passed value.
+     *
+     * Used on iOS 8.2, iWatch and also Safari
+     *
+     * @param subtitle the text to appear to the user
+     * @return  this
+     */
+    public PayloadBuilder alertSubTitle(final String subtitle) {
+        customAlert.put("subtitle", subtitle);
+        return this;
+    }
+
+
+    /**
      * The key to a title string in the Localizable.strings file for the current localization.
      *
      * @param key  the localizable message title key
@@ -155,6 +170,22 @@ public final class PayloadBuilder {
             aps.put("sound", sound);
         } else {
             aps.remove("sound");
+        }
+        return this;
+    }
+
+    /**
+     * Sets mutable content flag
+     *
+     * @param mutableContent sets the property if the value is true
+     *                       removes it when the value is false
+     * @return  this
+     */
+    public PayloadBuilder mutableContent(final boolean mutableContent) {
+        if (mutableContent) {
+            aps.put("mutable-content", "1");
+        } else {
+            aps.remove("mutable-content");
         }
         return this;
     }

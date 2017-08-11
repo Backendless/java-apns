@@ -1,32 +1,32 @@
-/*
- *  Copyright 2009, Mahmood Ali.
- *  All rights reserved.
+ /*
+ * Copyright 2009, Mahmood Ali.
+ * All rights reserved.
  *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions are
- *  met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
  *
- *    * Redistributions of source code must retain the above copyright
- *      notice, this list of conditions and the following disclaimer.
- *    * Redistributions in binary form must reproduce the above
- *      copyright notice, this list of conditions and the following disclaimer
- *      in the documentation and/or other materials provided with the
- *      distribution.
- *    * Neither the name of Mahmood Ali. nor the names of its
- *      contributors may be used to endorse or promote products derived from
- *      this software without specific prior written permission.
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following disclaimer
+ *     in the documentation and/or other materials provided with the
+ *     distribution.
+ *   * Neither the name of Mahmood Ali. nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
  *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.notnoop.apns.internal;
 
@@ -44,7 +44,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSocketFactory;
 import com.notnoop.apns.ApnsDelegate;
 import com.notnoop.apns.StartSendingApnsDelegate;
@@ -132,8 +131,8 @@ public class ApnsConnectionImpl implements ApnsConnection {
         Utilities.close(socket);
     }
 
-    private void monitorSocket(final Socket socketToMonitor) {
-        logger.debug("Launching Monitoring Thread for socket {}", socketToMonitor);
+    private void monitorSocket(final Socket socket) {
+        logger.debug("Launching Monitoring Thread for socket {}", socket);
 
         Thread t = threadFactory.newThread(new Runnable() {
             final static int EXPECTED_SIZE = 6;
@@ -145,9 +144,8 @@ public class ApnsConnectionImpl implements ApnsConnection {
                 try {
                     InputStream in;
                     try {
-                        in = socketToMonitor.getInputStream();
+                        in = socket.getInputStream();
                     } catch (IOException ioe) {
-                        logger.warn("The value of socket is null", ioe);
                         in = null;
                     }
 
@@ -156,7 +154,7 @@ public class ApnsConnectionImpl implements ApnsConnection {
                         logger.debug("Error-response packet {}", Utilities.encodeHex(bytes));
                         // Quickly close socket, so we won't ever try to send push notifications
                         // using the defective socket.
-                        Utilities.close(socketToMonitor);
+                        Utilities.close(socket);
 
                         int command = bytes[0] & 0xFF;
                         if (command != 8) {
@@ -222,7 +220,7 @@ public class ApnsConnectionImpl implements ApnsConnection {
                     logger.info("Exception while waiting for error code", e);
                     delegate.connectionClosed(DeliveryError.UNKNOWN, -1);
                 } finally {
-                    Utilities.close(socketToMonitor);
+                    close();
                     drainBuffer();
                 }
             }
@@ -336,9 +334,6 @@ public class ApnsConnectionImpl implements ApnsConnection {
                 //logger.debug("Message \"{}\" sent", m);
                 attempts = 0;
                 break;
-            } catch (SSLHandshakeException e) {
-                // No use retrying this, it's dead Jim
-                throw new NetworkIOException(e);
             } catch (IOException e) {
                 Utilities.close(socket);
                 if (attempts >= RETRIES) {

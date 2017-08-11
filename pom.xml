@@ -1,29 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.notnoop.apns</groupId>
     <artifactId>apns</artifactId>
-    <version>1.0.0.Beta7-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>Java Apple Push Notification Service Library</name>
-
-    <!-- Inherit the Sonatype OSS deployment configuration -->
+    <!--  Inherit the Sonatype OSS deployment configuration  -->
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-
     <scm>
         <connection>scm:git:git://github.com/notnoop/java-apns.git</connection>
         <developerConnection>scm:git:git@github.com:notnoop/java-apns.git</developerConnection>
         <url>http://github.com/notnoop/java-apns</url>
-        <tag>HEAD</tag>
+        <tag>apns-1.0.0.Beta6</tag>
     </scm>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -66,8 +63,10 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <archive> 
-                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    <archive>
+                        <manifestFile>
+                            ${project.build.outputDirectory}/META-INF/MANIFEST.MF
+                        </manifestFile>
                     </archive>
                 </configuration>
                 <executions>
@@ -78,14 +77,16 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>  
+            <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
-		<!--
-                <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
-		-->
+                <!--
+
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
+
+                -->
                 <executions>
                     <execution>
                         <id>generate-javadoc</id>
@@ -97,7 +98,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
@@ -125,9 +125,9 @@
                     <execution>
                         <id>bundle-manifest</id>
                         <phase>process-classes</phase>
-                        <goals>   
+                        <goals>
                             <goal>manifest</goal>
-                        </goals>  
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
@@ -138,101 +138,75 @@
                     </instructions>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>2.11</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <strictCheck>true</strictCheck>
-                    <aggregate>true</aggregate>
-                    <header>LICENSE</header>
-                    <validHeaders>
-                        <validHeader>LICENSE.contributor</validHeader>
-                    </validHeaders>
-                    <mapping>
-                        <xml>XML_STYLE</xml>
-                        <java>SLASHSTAR_STYLE</java>
-                        <clj>SEMICOLON_STYLE</clj>
-                    </mapping>
-                    <useDefaultExcludes>true</useDefaultExcludes>
-                    <includes>
-                        <include>src/**/*.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
             <!--
 
-            We need to wait for findbugs 3.0.0 to test on JDK 8
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <failOnError>false</failOnError>
+                        We need to wait for findbugs 3.0.0 to test on JDK 8
 
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                    <xmlOutput>true</xmlOutput>
-                    <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>analyze-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>xml-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>transform</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <transformationSets>
-                        <transformationSet>
-                            <dir>${project.build.directory}/findbugs</dir>
-                            <outputDir>${project.build.directory}/findbugs</outputDir>
-                            <stylesheet>fancy-hist.xsl</stylesheet>    -->
-            <!--<stylesheet>default.xsl</stylesheet>-->
-            <!--<stylesheet>plain.xsl</stylesheet>-->
-            <!--<stylesheet>fancy.xsl</stylesheet>-->
-            <!--<stylesheet>summary.xsl</stylesheet>--><!--
-                            <fileMappers>
-                                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
-                                    <targetExtension>.html</targetExtension>
-                                </fileMapper>
-                            </fileMappers>
-                        </transformationSet>
-                    </transformationSets>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.google.code.findbugs</groupId>
-                        <artifactId>findbugs</artifactId>
-                        <version>2.0.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>findbugs-maven-plugin</artifactId>
+                            <version>2.5.3</version>
+                            <configuration>
+                                <failOnError>false</failOnError>
+
+                                <effort>Max</effort>
+                                <threshold>Low</threshold>
+                                <xmlOutput>true</xmlOutput>
+                                <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>analyze-compile</id>
+                                    <phase>compile</phase>
+                                    <goals>
+                                        <goal>check</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>xml-maven-plugin</artifactId>
+                            <version>1.0</version>
+                            <executions>
+                                <execution>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>transform</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <transformationSets>
+                                    <transformationSet>
+                                        <dir>${project.build.directory}/findbugs</dir>
+                                        <outputDir>${project.build.directory}/findbugs</outputDir>
+                                        <stylesheet>fancy-hist.xsl</stylesheet>
+            -->
+            <!-- <stylesheet>default.xsl</stylesheet> -->
+            <!-- <stylesheet>plain.xsl</stylesheet> -->
+            <!-- <stylesheet>fancy.xsl</stylesheet> -->
+            <!-- <stylesheet>summary.xsl</stylesheet> -->
+            <!--
+
+                                        <fileMappers>
+                                            <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                                                <targetExtension>.html</targetExtension>
+                                            </fileMapper>
+                                        </fileMappers>
+                                    </transformationSet>
+                                </transformationSets>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.google.code.findbugs</groupId>
+                                    <artifactId>findbugs</artifactId>
+                                    <version>2.0.0</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+
             -->
         </plugins>
         <pluginManagement>
@@ -245,18 +219,19 @@
             </plugins>
         </pluginManagement>
     </build>
-
     <!--
-    <distributionManagement>
-        <site>
-            <id>gh-pages</id>
-            <url>file:${project.basedir}/site</url>
-        </site>
-        <repository>
-            <id>notnoop-m2-repository</id>
-            <url>file:${project.basedir}/target/deploy/repo</url>
-        </repository>
-    </distributionManagement>
+
+        <distributionManagement>
+            <site>
+                <id>gh-pages</id>
+                <url>file:${project.basedir}/site</url>
+            </site>
+            <repository>
+                <id>notnoop-m2-repository</id>
+                <url>file:${project.basedir}/target/deploy/repo</url>
+            </repository>
+        </distributionManagement>
+
     -->
     <dependencies>
         <dependency>
@@ -264,27 +239,23 @@
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
         </dependency>
-
         <dependency>
             <groupId>uk.org.lidalia</groupId>
             <artifactId>slf4j-test</artifactId>
             <version>1.0.0-jdk6</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>annotations</artifactId>
             <version>2.0.3</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.2</version>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -292,7 +263,6 @@
             <type>jar</type>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
@@ -308,13 +278,9 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <!-- Site Generation -->
+    <!--  Site Generation  -->
     <url>http://notnoop.github.com/java-apns</url>
-    <description>
-        Library to send Apple Push Notification.
-    </description>
-
+    <description>Library to send Apple Push Notification.</description>
     <licenses>
         <license>
             <name>New BSD License</name>
@@ -322,7 +288,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <reporting>
         <plugins>
             <plugin>
@@ -345,17 +310,14 @@
             </plugin>
         </plugins>
     </reporting>
-
     <issueManagement>
         <system>Github</system>
         <url>http://github.com/java-apns/java-apns/issues</url>
     </issueManagement>
-
     <developers>
         <developer>
             <id>notnoop</id>
             <name>Mahmood Ali</name>
         </developer>
     </developers>
-
 </project>
